@@ -34,9 +34,8 @@ main:hover {
     0 0 0 1px rgba(255, 255, 255, 0.09);
 }
 
-
-
-#outputSection {
+/* Output Section */
+#outputSection, #errorSection {
   margin-top: 32px;
   padding: 24px 28px;
   border-radius: 14px;
@@ -47,21 +46,33 @@ main:hover {
   font-family: 'Inter', sans-serif;
   max-height: 400px;
   overflow-y: auto;
+  overflow-x: hidden; /* verhindert horizontalen Scroll */
+  word-break: break-word;
+  background-clip: padding-box; /* für saubere Ecken */
 }
 
+#outputSection {
+  background: #f9faff;
+  color: #202040;
+  border: 1.5px solid #c1c6ff;
+}
+
+#errorSection {
+  background: #ffe7e7;
+  color: #cc0000;
+  border: 1.5px solid #ff9999;
+}
+
+/* Spezifisch für <pre> in outputSection, damit Text richtig umbrechen kann */
 #outputSection pre {
-  word-break: break-word;
-  overflow-wrap: break-word;
+  white-space: pre-wrap;      /* Zeilenumbruch aktivieren */
+  word-break: break-word;     /* Lange Wörter umbrechen */
+  overflow-wrap: break-word;  /* Backup */
   max-width: 100%;
   box-sizing: border-box;
 }
 
-
-
-
-
-
-
+/* Überschrift */
 h1 {
   font-weight: 700;
   font-size: 2.25rem;
@@ -71,6 +82,7 @@ h1 {
   letter-spacing: -0.02em;
 }
 
+/* Formularelemente */
 form label {
   display: block;
   font-weight: 600;
@@ -102,6 +114,7 @@ form input[type="text"]:focus {
   background: #fff;
 }
 
+/* Button */
 button {
   width: 100%;
   padding: 16px;
@@ -112,7 +125,7 @@ button {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: background 0.35s ease;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
   box-shadow: 0 4px 12px rgba(102,126,234,0.45);
 }
 
@@ -121,30 +134,7 @@ button:hover {
   box-shadow: 0 6px 20px rgba(90,109,209,0.6);
 }
 
-#outputSection, #errorSection {
-  margin-top: 32px;
-  padding: 24px 28px;
-  border-radius: 14px;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.08);
-  white-space: pre-wrap;
-  font-family: 'Inter', sans-serif;
-}
-
-#outputSection {
-  background: #f9faff;
-  color: #202040;
-  border: 1.5px solid #c1c6ff;
-}
-
-#errorSection {
-  background: #ffe7e7;
-  color: #cc0000;
-  border: 1.5px solid #ff9999;
-}
-
+/* Responsive */
 @media (max-width: 650px) {
   main {
     padding: 30px 25px;
