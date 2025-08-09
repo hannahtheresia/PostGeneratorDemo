@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const prompts = {
   linkedin: `Create a professional LinkedIn post about "[TOPIC]" with the goal "[GOAL]". The post should include a strong hook, 3 practical tips, and a clear call to action. Maximum 180 words, formal but personal tone.`,
   instagram: `Write an Instagram post about "[TOPIC]" with the goal "[GOAL]". Start with an emotional question, provide 2-3 simple tips, use a friendly tone, max 120 words. Do not include hashtags.`,
@@ -32,7 +30,7 @@ module.exports = async (req, res) => {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 400,
         temperature: 0.3,
@@ -40,6 +38,7 @@ module.exports = async (req, res) => {
     });
 
     const json = await openaiRes.json();
+
     if (json.error) {
       return res.status(500).json({ error: json.error.message || 'OpenAI API error' });
     }
