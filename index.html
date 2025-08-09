@@ -22,10 +22,18 @@
       </select>
 
       <label for="topic">Topic:</label>
-      <input type="text" id="topic" placeholder="Enter your topic" required />
+      <input type="text" id="topic" placeholder="e.g. AI in marketing, summer fashion trends, healthy eating" required />
 
       <label for="goal">Goal:</label>
-      <input type="text" id="goal" placeholder="What is your goal?" required />
+      <select id="goal" required>
+        <option value="">-- Please select a goal --</option>
+        <option value="more leads">Generate more leads</option>
+        <option value="brand awareness">Increase brand awareness</option>
+        <option value="promote product">Promote a product or service</option>
+        <option value="event promotion">Promote an event</option>
+        <option value="customer retention">Improve customer retention</option>
+        <option value="expert positioning">Establish expert authority</option>
+      </select>
 
       <button type="submit">Generate Post</button>
     </form>
@@ -44,6 +52,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
