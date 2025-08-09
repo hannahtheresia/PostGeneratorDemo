@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Social Post Generator</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-primary: #2563EB;
+      --color-accent: #F59E0B;
+      --color-text-main: #111827;
+      --color-text-secondary: #6B7280;
+      --color-border: #E5E7EB;
+      --color-success: #10B981;
+      --color-error: #EF4444;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text-main);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 2rem 1rem;
+    }
+    h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 0.2rem;
+      color: var(--color-primary);
+      text-align: center;
+    }
+    p.lead {
+      text-align: center;
+      color: var(--color-text-secondary);
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    label {
+      display: block;
+      margin-top: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+      font-size: 1rem;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--color-border);
+      margin-top: 0.5rem;
+      transition: border-color 0.3s ease;
+    }
+    select:focus, input[type="text"]:focus {
+      border-color: var(--color-primary);
+      outline: none;
+      box-shadow: 0 0 5px var(--color-primary);
+    }
+    button {
+      margin-top: 2rem;
+      background-color: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.4);
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1E40AF;
+    }
+    button:disabled {
+      background-color: var(--color-border);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    #result {
+      margin-top: 2rem;
+      background: #E0E7FF;
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      min-height: 120px;
+      white-space: pre-wrap;
+      color: var(--color-text-main);
+      position: relative;
+    }
+    #copy-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--color-accent);
+      border: none;
+      color: white;
+      padding: 0.4rem 0.7rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #copy-btn:hover {
+      background: #B45309;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--color-primary);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 0.75rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Social Post Generator</h1>
+  <p class="lead">Generate custom social media posts tailored for your platform in seconds.</p>
+
+  <label for="platform">Choose your platform</label>
+  <select id="platform" aria-label="Choose platform">
+    <option value="linkedin">LinkedIn</option>
+    <option value="instagram">Instagram</option>
+    <option value="facebook">Facebook</option>
+    <option value="tiktok">TikTok</option>
+    <option value="twitter">Twitter</option>
+  </select>
+
+  <label for="topic">Topic</label>
+  <input id="topic" type="text" placeholder="e.g. client acquisition without ads" aria-label="Enter topic" />
+
+  <label for="goal">Post goal</label>
+  <input id="goal" type="text" placeholder="e.g. generate more inquiries" aria-label="Enter post goal" />
+
+  <button id="generate" aria-live="polite" aria-busy="false">Generate Post</button>
+
+  <section id="result" aria-live="polite" aria-atomic="true" tabindex="0">
+    <!-- Result will appear here -->
+  </section>
+
+  <script>
+    const generateBtn = document.getElementById('generate');
+    const resultEl = document.getElementById('result');
+    let currentOutput = '';
+
+    generateBtn.addEventListener('click', async () => {
+      const platform = document.getElementById('platform').value;
+      const topic = document.getElementById('topic').value.trim();
+      const goal = document.getElementById('goal').value.trim();
+
+      if (!topic || !goal) {
+        alert('Please enter both topic and post goal.');
+        return;
+      }
+
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Generating...';
+      resultEl.textContent = '';
+      removeCopyButton();
+
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform, topic, goal }),
+        });
+        const data = await response.json();
+
+        if (data.error) {
+          resultEl.textContent = 'Error: ' + data.error;
+        } else {
+          currentOutput = data.output;
+          resultEl.textContent = currentOutput;
+          addCopyButton();
+        }
+      } catch (error) {
+        resultEl.textContent = 'Network error: ' + error.message;
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate Post';
+      }
+    });
+
+    function addCopyButton() {
+      if (document.getElementById('copy-btn')) return;
+
+      const btn = document.createElement('button');
+      btn.id = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.title = 'Copy to clipboard';
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(currentOutput).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        });
+      });
+
+      resultEl.appendChild(btn);
+    }
+
+    function removeCopyButton() {
+      const btn = document.getElementById('copy-btn');
+      if (btn) btn.remove();
+    }
+  </script>
+</body>
+</html>
+
+
