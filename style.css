@@ -34,6 +34,34 @@ main:hover {
     0 0 0 1px rgba(255, 255, 255, 0.09);
 }
 
+
+
+#outputSection {
+  margin-top: 32px;
+  padding: 24px 28px;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  white-space: pre-wrap;
+  font-family: 'Inter', sans-serif;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#outputSection pre {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+
+
+
+
 h1 {
   font-weight: 700;
   font-size: 2.25rem;
@@ -122,4 +150,5 @@ button:hover {
     padding: 30px 25px;
   }
 }
+
 
